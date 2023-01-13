@@ -4,25 +4,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="style.css">
     <title>入力画面</title>
-    <script src="script.js">
-    </script>
 </head>
 
 <body>
     <!-- <form action="login_confirm.php" method="POST"> -->
 
-    <legend>mountain i would like to go!</legend>
+    <p>mountain i would like to go!</p>
     <!-- <a href="todo_read.php">一覧画面</a> -->
 
     <div>
-        <select id="mont" name="name">
+        <select id="mont">
             <option></option>
             <option value="1" id="mont">百名山</option>
             <option value="2" id="mont">二百名山</option>
         </select>
 
-        <select id="prefecture">
+        <select class="prefecture" id="prefecture">
             <option></option>
             <option value="1">北海道</option>
             <option value="2">青森県</option>
@@ -78,17 +77,22 @@
         <button id="button">検索</button>
     </div>
 
-    <form action="mt_create.php" method="POST">
+    <div class="container">
+        <button class="ajax_button" href="mt_create.php">ajax</button>
         <div id="output"></div>
-    </form>
-    <div>
-        <button><a href="mt_create.php">submit</a></button>
     </div>
 
+    <div>
+
+        <!-- <a id="summit" href="mt_create.php">submit</a> -->
+    </div>
 
     <!-- jquery library -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <!-- <script src="https://code.jquery.com/jquery.min.js"></script> -->
+    <!-- <script src="https://unpkg.com/axios/dist/axios.min.js"></script> -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script>
         $("#button").on("click", function() {
 
@@ -111,20 +115,25 @@
             axios.get(URL_mont)
                 .then(function(response) {
 
-                    console.log(response.data)
+                    console.log(response.data) //dataの確認
 
                     const mont = Object.entries(response.data);
-                    console.log(Object.entries(response.data));
+                    console.log(Object.entries(response.data)); //dataを配列に戻す
 
-                    const mountain = mont[0];
-                    console.log(mountain[1]);
+                    const mountain = mont[0]; //必要なデータを取り出す
+                    let data = mountain[1]; //さらに奥のデータを取り出す
 
-                    const data = mountain[1]
-                    const yama = [];
+                    console.log(mountain[1]); //取れてるかどうかの確認
+                    console.log(data[0]); //理想のdata状態確認
+
+
+                    const yama = []; //空の配列
+
 
                     data.forEach(function(good_mont) {
-                        yama.push(`<input type="checkbox">
-                            <p name${good_mont.id}="mont_id">${good_mont.id}</p>
+
+                        yama.push(`<form action="mt_create.php" method="POST"><div><input class="yamapush" name="check" type="checkbox">
+                            <p name="mountain_id">${good_mont.id}</p>
                             <p name="name">${good_mont.name}</p>
                             <p name="nameKana">${good_mont.nameKana}</p>
                             <p name="area">${good_mont.area}</p>
@@ -132,12 +141,96 @@
                             <a name="gsiUrl" href=${good_mont.location.gsiUrl}>地図</a>
                             <div><p name="latitude">${good_mont.location.latitude}</p>
                             <p name="longitude">${good_mont.location.longitude}</p>
-                            </div>`) //データ取得＆HTML表示
+                            </div> <a id="summit" href="mt_create.php">submit</a></div></form>`) //データ取得＆HTML表示
+
                     });
+
+                    // $('li').on('click', function() {
+                    //     var index = $('li.sample').index(this);
+                    //     alert(index);
+                    // });
 
                     $("#output").html(yama); //outputのとこに、取ってきたデータを表示させる
                 });
         });
+
+        $(".ajax_button").on("click", function() {
+
+            let no = document.getElementById("mont").value
+            let str = document.getElementById("prefecture").value
+
+            let mont_no = no;
+            let ken = str;
+
+            console.log(mont_no);
+            console.log(ken);
+
+            //APIを動かす変数
+            const mont_tag = mont_no; //百名山、二百名山
+            const prefecture = ken; //県
+
+            const URL_mont = `https://mountix.codemountains.org/api/v1/mountains?tag=${mont_tag}&prefecture=${prefecture}`;
+
+            axios.get(URL_mont)
+                .then(function(response) {
+
+                    console.log(response.data) //dataの確認
+
+                    const mont = Object.entries(response.data);
+                    console.log(Object.entries(response.data)); //dataを配列に戻す
+
+                    const mountain = mont[0]; //必要なデータを取り出す
+                    let data = mountain[1]; //さらに奥のデータを取り出す
+
+                    // const data2 = Object.entries(mountain[1]);
+                    console.log(data);
+                    console.log(data.name);
+
+                    for (var i = 0; i < data.length; i++)
+                        var data1 = {
+
+                            name: data[i].name,
+                            prefecture: data[i].prefecture,
+
+                        };
+
+
+
+                    const url = 'mt_create.php';
+
+                    axios.post(url, data1) //
+                        .then(response => {
+
+                            console.log(response.data1);
+
+                        })
+                        .catch(error => {
+
+                            console.log(error);
+
+                        });
+
+                });
+        });
+
+
+        // $(".ajax_button").on("click", function() {
+
+        //     var url = '/mt_create.php';
+
+        //     $.ajax({
+        //         type: "POST",
+        //         url: url,
+        //         data: {
+        //             data: data
+        //         }
+        //     }).done(function(data) {
+        //         data = JSON.parse(data);
+        //         console.log(data);
+        //     }).fail(function(XMLHttpRequest, textStatus, errorThrown) {
+        //         return;
+        //     })
+        // });
     </script>
     </div>
 </body>
