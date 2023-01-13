@@ -19,17 +19,21 @@ $output = "";
 foreach ($result as $record) {
   $output .= "
     <tr>
+     
       <td>{$record["mountain_id"]}</td>
-      <td>{$record["name"]}</td>
+      <td>{$record["mont"]}</td>
       <td>{$record["nameKana"]}</td>
       <td>{$record["area"]}</td>
-      <td>{$record["prefecture"]}</td>
-      <td>{$record["gsiUrl"]}</td>
+      <td>{$record["prefectures"]}</td>
+      <td>{$record["latitude"]}</td>
+      <td>{$record["longitude"]}</td>
+      <td>{$record["happy"]}</td>
+     
       <td>
-      <a href='todo_edit.php?id={$record["id"]}'>編集</a>
+      <a href='mt_edit.php?id={$record["id"]}'>編集</a>
       </td>
       <td>
-       <a href='todo_delete.php?id={$record["id"]}'>削除</a>
+       <a href='mt_delete.php?id={$record["id"]}'>削除</a>
       </td>
     </tr>
   ";
@@ -43,13 +47,13 @@ foreach ($result as $record) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DB連携型todoリスト（一覧画面）</title>
+  <title>私の山リスト</title>
 </head>
 
 <body>
   <fieldset>
-    <legend>DB連携型todoリスト（一覧画面）</legend>
-    <a href="todo_input.php">入力画面</a>
+    <legend>私の山リスト</legend>
+    <a href="mt_input.php">入力画面</a>
     <table>
       <thead>
         <tr>

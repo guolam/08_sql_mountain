@@ -8,7 +8,7 @@ $id = $_GET["id"];
 $pdo = connect_to_db();
 
 // SQL実行
-$sql = "SELECT*FROM todo_table WHERE id=:id";
+$sql = "SELECT*FROM mountain WHERE id=:id";
 $stmt = $pdo->prepare($sql);
 $stmt->bindValue(':id', $id, PDO::PARAM_INT);
 try {
@@ -29,23 +29,28 @@ $record = $stmt->fetch(PDO::FETCH_ASSOC);
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DB連携型todoリスト（編集画面）</title>
+  <title>編集画面</title>
 </head>
 
 <body>
-  <form action="todo_update.php" method="POST">
+  <form action="mt_update.php" method="POST">
     <fieldset>
-      <legend>DB連携型todoリスト（編集画面）</legend>
-      <a href="todo_read.php">一覧画面</a>
+      <legend>行きたかった山</legend>
+      <a href="mt_read.php">一覧画面</a>
       <div>
-        todo: <input type="text" name="todo" value="<?= $record["todo"] ?>">
-      </div>
-      <div>
-        deadline: <input type="date" name="deadline" value="<?= $record["deadline"] ?>">
-      </div>
-      <div>
+        <input type="hidden" name="id" value="<?= $record["id"] ?>">
+        <input type="hidden" name="mountain_id" value="<?= $record["mountain_id"] ?>">
+
+        山：<input name="mont" value="<?= $record["mont"] ?>"><br>
+        読み：<input name="nameKana" value="<?= $record["nameKana"] ?>"><br>
+        地域：<input name="area" value="<?= $record["area"] ?>" readonly><br>
+        県：<input name="prefectures" value="<?= $record["prefectures"] ?>" readonly><br>
+        経度：<input name="latitude" value="<?= $record["latitude"] ?>" readonly><br>
+        緯度：<input name="longitude" value="<?= $record["longitude"] ?>" readonly><br>
+        所感:<textarea name="happy" value="<?= $record["happy"] ?>"></textarea><br>
+
         <div>
-          <input type="hidden" name="id" value="<?= $record["id"] ?>">
+
         </div>
         <button>submit</button>
       </div>

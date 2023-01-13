@@ -5,21 +5,18 @@ include("functions.php");
 // exit();
 
 // データ受け取り
-
-
 $id = $_GET["id"];
 
 
 // DB接続
-
 $pdo = connect_to_db();
 
+// SQL実行
 // //物理削除
 // $sql = 'DELETE FROM todo_table WHERE id=:id';
 
 //論理削除
-
-$sql = 'UPDATE todo_table SET delete_at=now() WHERE id=:id';
+$sql = 'UPDATE mountain SET deleted_at=now() WHERE id=:id';
 
 $stmt = $pdo->prepare($sql);
 $stmt->bindValue(':id', $id, PDO::PARAM_STR);
@@ -31,7 +28,5 @@ try {
     exit();
 }
 
-header("Location: todo_read.php");
+header("Location: mt_read.php");
 exit();
-
-// SQL実行
